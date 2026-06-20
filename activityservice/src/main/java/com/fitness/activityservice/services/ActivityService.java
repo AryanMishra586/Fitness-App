@@ -1,5 +1,9 @@
 package com.fitness.activityservice.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.fitness.activityservice.dto.ActivityRequest;
@@ -44,5 +48,20 @@ public class ActivityService {
         response.setCreatedAt(activity.getCreatedAt());
         response.setUpdatedAt(activity.getUpdatedAt());
         return response;
+    }
+
+    public  List<ActivityResponse> getActivityByUserId(String userId) {
+
+        List<Activity> activities = activityRepository.findByUserId(userId);
+        List<ActivityResponse> responses = new ArrayList<>();
+        for(Activity activity : activities) {
+            responses.add(convertToResponse(activity));
+        }
+        return responses;
+    }
+
+    public ActivityResponse getActivityById(String id) {
+        Activity activity = activityRepository.findById(id).orElseThrow(() -> new RuntimeException("Activity not found"));
+        return convertToResponse(activity);
     }
 }
