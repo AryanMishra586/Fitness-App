@@ -1,5 +1,6 @@
 package com.fitness.userservice.services;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.fitness.userservice.dto.RegisterRequest;
@@ -45,5 +46,8 @@ public class UserService {
         response.setRole(savedUser.getRole());
         response.setId(savedUser.getId());
         return response;
+    }
+    public Boolean validateUser(String userId) {
+        return userRepository.existsById(userId);
     }
 }
