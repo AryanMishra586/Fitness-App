@@ -3,7 +3,9 @@ package com.fitness.activityservice.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jspecify.annotations.Nullable;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
+// import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.fitness.activityservice.dto.ActivityRequest;
@@ -12,12 +14,20 @@ import com.fitness.activityservice.models.Activity;
 import com.fitness.activityservice.repository.ActivityRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class ActivityService {
     
     private final ActivityRepository activityRepository;
     private final UserValidationService userValidationService;
+    private final RabbitTemplate rabbitTemplate;
+
+    @Value("${rabbitmq.exhange.name}")
+    private String exchange;
+    @Value("${rabbitmq.routing.key}")
+    private String routingKey;
     
     public ActivityService(ActivityRepository activityRepository, UserValidationService userValidationService) {
         this.activityRepository = activityRepository;
@@ -42,6 +52,17 @@ public class ActivityService {
         activity.setAdditionalMetrics(request.getAdditionalMetrics());
         
         Activity savedActivity = activityRepository.save(activity);
+
+        // Publish to rabbitmq
+        try{
+
+        }
+        catch(Exception e){
+            
+        }
+
+
+
         return convertToResponse(savedActivity);
     }
     public ActivityResponse convertToResponse(Activity activity) {
