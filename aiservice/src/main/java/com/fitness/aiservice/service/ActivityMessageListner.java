@@ -17,11 +17,15 @@ public class ActivityMessageListner {
     @Value("${rabbitmq.queue.name}")
     private String queueName;
 
+    private final ActivityAiService aiService;
+
 
     @RabbitListener(queues = "${rabbitmq.queue.name}")
     public void processActivity(Activity activity){
         log.info("Received activity from queue {}: {}", queueName, activity);
+        log.info("Generated Recommendation : {}", aiService.generateRecommendation(activity));
         // Here you can add logic to process the activity, e.g., save to database, call recommendation engine, etc.
     }
     
 }
+
