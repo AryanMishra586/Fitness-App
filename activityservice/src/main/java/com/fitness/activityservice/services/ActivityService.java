@@ -15,9 +15,11 @@ import com.fitness.activityservice.repository.ActivityRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ActivityService {
     
     private final ActivityRepository activityRepository;
@@ -29,10 +31,10 @@ public class ActivityService {
     @Value("${rabbitmq.routing.key}")
     private String routingKey;
     
-    public ActivityService(ActivityRepository activityRepository, UserValidationService userValidationService) {
-        this.activityRepository = activityRepository;
-        this.userValidationService = userValidationService;
-    }
+    // public ActivityService(ActivityRepository activityRepository, UserValidationService userValidationService) {
+    //     this.activityRepository = activityRepository;
+    //     this.userValidationService = userValidationService;
+    // }
     
     public ActivityResponse trackActivity(ActivityRequest request) {
         
@@ -55,10 +57,11 @@ public class ActivityService {
 
         // Publish to rabbitmq
         try{
-
+            rabbitTemplate.convertAndSend(exchange, routingKey,savedActivity);
         }
         catch(Exception e){
-            
+            log.error("Failed to Publish activity to RabbitMQ");
+            throw new RuntimeException("Error occurred while publishing to RabbitMQ");
         }
 
 

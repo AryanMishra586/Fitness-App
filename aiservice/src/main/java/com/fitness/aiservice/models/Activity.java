@@ -1,18 +1,19 @@
-package com.fitness.activityservice.dto;
+package com.fitness.aiservice.models;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import com.fitness.activityservice.models.ActivityType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
 @Data
-public class ActivityResponse {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Activity {
     
     private String id;
     private String userId;
-    private ActivityType activityType;
+    private String activityType;
     private Integer duration;
     private Double caloriesBurned;
     private LocalDateTime startTime;
