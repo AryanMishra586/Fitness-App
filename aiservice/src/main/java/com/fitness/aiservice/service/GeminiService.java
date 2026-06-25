@@ -21,6 +21,9 @@ public class GeminiService {
     }
 
     public String getAnswer(String question){
+        if (geminiApiKey == null || geminiApiKey.isBlank() || geminiApiUrl == null || geminiApiUrl.isBlank()) {
+            return null;
+        }
 
         Map<String, Object> requestBody = Map.of(
             "contents",new Object[]{
