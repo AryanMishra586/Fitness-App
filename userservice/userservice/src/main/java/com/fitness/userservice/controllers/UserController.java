@@ -14,9 +14,11 @@ import com.fitness.userservice.services.UserService;
 
 import jakarta.validation.Valid;
 // import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/users")
+@Slf4j
 // @AllArgsConstructor
 public class UserController {
     
@@ -40,6 +42,7 @@ public class UserController {
     @GetMapping("/{userId}/validate")
     public ResponseEntity<Boolean> validateUser(@PathVariable String userId) {
 
+        log.info("Validating user with ID: {}", userId);
         return ResponseEntity.ok(userService.validateUser(userId));
     }
 
