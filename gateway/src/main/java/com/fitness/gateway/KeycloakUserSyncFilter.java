@@ -28,13 +28,18 @@ class KeycloakUserSyncFilter implements WebFilter {
      
         String userId=exchange.getRequest().getHeaders().getFirst("X-USER-ID");
         String token=exchange.getRequest().getHeaders().getFirst("Authorization");
+        RegisterRequest registerRequest = getuserDetails(token);
+        if(userId==null){
+            userId=registerRequest.getKeycloakId();
+        }
 
         if(userId!=null && token!=null){
+            String finalUserId = userId;
             return userService.validateUser(userId)
                 .flatMap(exist -> {
                     if (!exist) {
                         // Register user
-                        RegisterRequest registerRequest = getuserDetails(token);
+                        
                         if(registerRequest != null) {
                             return userService.registerUser(registerRequest).then(Mono.empty());
                         }
@@ -48,7 +53,7 @@ class KeycloakUserSyncFilter implements WebFilter {
                 })
                 .then(Mono.defer(() ->{
                     ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                        .header("X-USER-ID", userId)
+                        .header("X-USER-ID", finalUserId)
                         .build();
                         return chain.filter(exchange.mutate().request(mutatedRequest).build());
                 }));
