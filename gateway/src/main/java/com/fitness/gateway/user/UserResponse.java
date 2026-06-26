@@ -1,5 +1,4 @@
-package com.fitness.userservice.dto;
-import com.fitness.userservice.models.UserRole;
+package com.fitness.gateway.user;
 
 import lombok.Data;
 
