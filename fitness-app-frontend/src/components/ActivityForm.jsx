@@ -5,6 +5,7 @@ import { Box, FormControl, InputLabel, Select, TextField } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { addActivity } from '../services/api.js';
 
 
 
@@ -15,13 +16,13 @@ const ActivityForm = ({onActivitysAdded}) => {
   const handleSubmit = async (e) =>{
     e.preventDefault();
     try{
-      // await addActivity(activity);
+      await addActivity(activity);
       onActivitysAdded();
       setActivity({ type : "RUNNING", duration : '', caloriesBurned : ''});
 
     }
     catch(error){
-
+      console.error("Error adding activity:", error);
     }
   }
   return (
