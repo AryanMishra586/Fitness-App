@@ -18,6 +18,6 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-export const getActivities = () => api.get(`/${userId}`);
+export const getActivities = (userId) => api.get(`/activities/${userId}`);
 export const addActivity = (activity) => api.post("/activities/track", activity);
-export const getActivityDetail = () => api.get(`/recommendations/activity/${id}`);
+export const getActivityDetail = (id) => api.get(`/recommendations/activity/${id}`);
