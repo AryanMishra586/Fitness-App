@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
-import Grid from "@mui/material/Grid2";
-import { setActivities } from '../store/activitySlice';
+import Grid from "@mui/material/Grid";
+// import { setActivities } from '../store/activitySlice';
 import { getActivities } from '../services/api.js';
 import { useEffect } from 'react';
 
@@ -16,6 +16,7 @@ const ActivityList = () => {
   const fetchActivities = async () =>{
     try{
       const response = await getActivities(userId);
+       console.log(response.data);
       setActivities(response.data);
     }
     catch(error){
@@ -40,7 +41,7 @@ const ActivityList = () => {
           >
             <CardContent>
               <Typography variant="h6">
-                {activity.type}
+                {activity.activityType}
               </Typography>
 
               <Typography>

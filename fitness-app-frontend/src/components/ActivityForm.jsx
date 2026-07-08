@@ -11,14 +11,14 @@ import { addActivity } from '../services/api.js';
 
 const ActivityForm = ({onActivitysAdded}) => {
 
-  const [activity, setActivity] = useState({ type : "RUNNING", duration : '', caloriesBurned : ''});
+  const [activity, setActivity] = useState({ activityType : "RUNNING", duration : '', caloriesBurned : ''});
 
   const handleSubmit = async (e) =>{
     e.preventDefault();
     try{
       await addActivity(activity);
       onActivitysAdded();
-      setActivity({ type : "RUNNING", duration : '', caloriesBurned : ''});
+      setActivity({ activityType : "RUNNING", duration : '', caloriesBurned : ''});
 
     }
     catch(error){
@@ -29,7 +29,7 @@ const ActivityForm = ({onActivitysAdded}) => {
      <Box component="form" onSubmit={handleSubmit} sx={{ mb : 4 }}>
       <FormControl fullWidth sx={{ mb : 2 }}>
         <InputLabel>Activity Type</InputLabel>
-        <Select value={activity.type} onChange={(e) => setActivity({...activity, type: e.target.value})}>
+        <Select value={activity.activityType} onChange={(e) => setActivity({...activity, activityType: e.target.value})}>
           <MenuItem value="RUNNING">Running</MenuItem>
           <MenuItem value="CYCLING">Cycling</MenuItem>
           <MenuItem value="WALKING">Walking</MenuItem>

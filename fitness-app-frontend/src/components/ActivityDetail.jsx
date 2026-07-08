@@ -1,22 +1,26 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router';
-import {useState} from 'react';
-import { Card, CardContent, Typography, Box, Divider } from '@mui/material';
-import { getActivityDetail } from '../services/api.js';
-import { useNavigate } from 'react-router';
-
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Divider,
+} from "@mui/material";
+import { getActivityDetail } from "../services/api.js";
 
 const ActivityDetail = () => {
   const { id } = useParams();
-  const [activity, setActivity] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
 
   useEffect(() => {
     const fetchActivityDetail = async () => {
       try {
         const response = await getActivityDetail(id);
-        setActivity(response.data/*.activity*/);
-        setRecommendation(response.data.recommendation);
+
+        console.log(response.data);
+
+        setRecommendation(response.data);
       } catch (error) {
         console.error("Error fetching activity detail:", error);
       }
@@ -25,27 +29,35 @@ const ActivityDetail = () => {
     fetchActivityDetail();
   }, [id]);
 
-  if(!activity) {
+  if (!recommendation) {
     return <Typography>Loading...</Typography>;
   }
+
   return (
-  <Box sx={{ maxWidth: 800, mx: 'auto', p: 2 }}>
-    <Card sx={{ mb: 2 }}>
-      <CardContent>
-        <Typography variant="h5" gutterBottom>
-          Activity Details
-        </Typography>
+    <Box sx={{ maxWidth: 800, mx: "auto", p: 2 }}>
+      <Card sx={{ mb: 2 }}>
+        <CardContent>
+          <Typography variant="h5" gutterBottom>
+            Activity Details
+          </Typography>
 
-        <Typography>Type: {activity.type}</Typography>
-        <Typography>Duration: {activity.duration} minutes</Typography>
-        <Typography>Calories Burned: {activity.caloriesBurned}</Typography>
-        <Typography>
-          Date: {new Date(activity.createdAt).toLocaleString()}
-        </Typography>
-      </CardContent>
-    </Card>
+          <Typography>
+            Activity Type: {recommendation.activityType}
+          </Typography>
 
-    {recommendation && (
+          <Typography>
+            Activity ID: {recommendation.activityId}
+          </Typography>
+
+          <Typography>
+            Generated On:{" "}
+            {recommendation.createdAt
+              ? new Date(recommendation.createdAt).toLocaleString()
+              : "N/A"}
+          </Typography>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardContent>
           <Typography variant="h5" gutterBottom>
@@ -57,7 +69,8 @@ const ActivityDetail = () => {
           </Typography>
 
           <Typography paragraph>
-            {activity.recommendation}
+            {recommendation.recommendation ||
+              "Unable to generate recommendation due to an AI service error."}
           </Typography>
 
           <Divider sx={{ my: 2 }} />
@@ -66,11 +79,15 @@ const ActivityDetail = () => {
             Improvements
           </Typography>
 
-          {activity?.improvements?.map((improvement, index) => (
-            <Typography key={index} paragraph>
-              • {improvement}
-            </Typography>
-          ))}
+          {recommendation.improvements?.length > 0 ? (
+            recommendation.improvements.map((item, index) => (
+              <Typography key={index} paragraph>
+                • {item}
+              </Typography>
+            ))
+          ) : (
+            <Typography>No improvements available.</Typography>
+          )}
 
           <Divider sx={{ my: 2 }} />
 
@@ -78,11 +95,15 @@ const ActivityDetail = () => {
             Suggestions
           </Typography>
 
-          {activity?.suggestions?.map((suggestion, index) => (
-            <Typography key={index} paragraph>
-              • {suggestion}
-            </Typography>
-          ))}
+          {recommendation.suggestions?.length > 0 ? (
+            recommendation.suggestions.map((item, index) => (
+              <Typography key={index} paragraph>
+                • {item}
+              </Typography>
+            ))
+          ) : (
+            <Typography>No suggestions available.</Typography>
+          )}
 
           <Divider sx={{ my: 2 }} />
 
@@ -90,16 +111,19 @@ const ActivityDetail = () => {
             Safety Guidelines
           </Typography>
 
-          {activity?.safety?.map((safety, index) => (
-            <Typography key={index} paragraph>
-              • {safety}
-            </Typography>
-          ))}
+          {recommendation.safety?.length > 0 ? (
+            recommendation.safety.map((item, index) => (
+              <Typography key={index} paragraph>
+                • {item}
+              </Typography>
+            ))
+          ) : (
+            <Typography>No safety guidelines available.</Typography>
+          )}
         </CardContent>
       </Card>
-    )}
-  </Box>
-);
-}
+    </Box>
+  );
+};
 
 export default ActivityDetail;
