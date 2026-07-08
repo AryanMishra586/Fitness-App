@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.service.annotation.GetExchange;
@@ -26,8 +27,11 @@ public class ActivityController {
         this.activityService = activityService;
     }
     @PostMapping("/track")
-    public ResponseEntity<ActivityResponse> trackActitvity( @RequestBody ActivityRequest request) {
-        // Logic to track activity
+    public ResponseEntity<ActivityResponse> trackActitvity( @RequestBody ActivityRequest request , @RequestHeader("X-User-Id") String userId) {
+
+        if(userId!=null){
+            request.setUserId(userId);
+        }
         return ResponseEntity.ok(activityService.trackActivity(request));
         
     }
